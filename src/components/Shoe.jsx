@@ -28,21 +28,6 @@ export function Shoe({ texture }) {
                 editableChild.material.map = updatedTexture
                 editableChild.material.needsUpdate = true
             }
-
-    //         const frontChild = shoe.children.find(child => child.material.name === "shoe_Outside_Front")
-    //         const backChild = shoe.children.find(child => child.material.name === "shoe_Outside_Back")
-    
-    //         if (frontChild) {
-    //             frontChild.material.map = updatedTexture
-    //             frontChild.material.needsUpdate = true
-    //         }
-    //         if (backChild) {
-    //             backChild.material.map = updatedTexture.clone()
-    //             backChild.material.map.repeat.x = -1
-    //             backChild.material.map.offset.x = 1
-    //             backChild.material.map.needsUpdate = true
-    //             backChild.material.needsUpdate = true
-    //         }
         }
     }, [shoeGltf, updatedTexture])
 
@@ -57,7 +42,7 @@ export function Shoe({ texture }) {
 export function ShoeCanvas({ texture }) {
   return (
     <Canvas
-      camera={{ position: [4, 0, 0] }}
+      camera={{ position: [4, 3, 0] }}
       >
         <Environment
             preset="sunset"
@@ -65,6 +50,8 @@ export function ShoeCanvas({ texture }) {
         <OrbitControls 
             enablePan={false}
             enableZoom={false}
+            autoRotate={true}
+            autoRotateSpeed={0.5}
             />
         <Shoe texture={texture} />
     </Canvas>

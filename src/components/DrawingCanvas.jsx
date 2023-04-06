@@ -3,7 +3,7 @@ import { fabric } from "fabric"
 import { ChromePicker } from "react-color"
 
 import { CgShapeSquare, CgShapeTriangle, CgShapeCircle } from "react-icons/cg"
-import { RiPaintFill, RiDeleteBin6Line, RiCloseCircleLine } from "react-icons/ri"
+import { RiPaintFill, RiDeleteBin6Line, RiCloseCircleLine, RiGridLine } from "react-icons/ri"
 import { BsCircleFill } from "react-icons/bs"
 import { FaShapes, FaPaintBrush } from "react-icons/fa"
 
@@ -19,31 +19,26 @@ export default function DrawingCanvas({applyTexture}) {
     const [currentColor, setCurrentColor] = useState("#ff3333")
     const [showColorPicker, setShowColorPicker] = useState(false)
     const [brushSize, setBrushSize] = useState(5)
+    const [showOverlay, setShowOverlay] = useState(true)
 
     // Effects
     useEffect(() => {
         if (!canvasRef.current) {
 
             canvasRef.current = new fabric.Canvas("fabric-canvas", {
-                height: 500,
-                width: 500,
+                height: 512,
+                width: 512,
                 isDrawingMode: isDrawingMode,
-                // freeDrawingCursor
                 backgroundColor: "#ffffff",
             })
 
             canvasRef.current.freeDrawingBrush.color = currentColor
+            canvasRef.current.freeDrawingBrush.width = brushSize
+
+            resizeCanvas()
 
             window.onresize = () => {
-                const outerCanvasContainer = document.getElementById("fabric-canvas-wrapper")
-
-                const ratio = canvasRef.current.getWidth() / canvasRef.current.getHeight()
-                const containerWidth = outerCanvasContainer.clientWidth
-                const scale = containerWidth / canvasRef.current.getWidth()
-                const zoom = canvasRef.current.getZoom() * scale
-
-                canvasRef.current.setDimensions({ width: containerWidth, height: containerWidth / ratio })
-                canvasRef.current.setViewportTransform([zoom, 0, 0, zoom, 0, 0])
+                resizeCanvas()
             }
         }
 
@@ -127,14 +122,32 @@ export default function DrawingCanvas({applyTexture}) {
         })
     }
 
+    const resizeCanvas = () => {
+        const outerCanvasContainer = document.getElementById("fabric-canvas-wrapper")
+
+        const ratio = canvasRef.current.getWidth() / canvasRef.current.getHeight()
+        const containerWidth = outerCanvasContainer.clientWidth
+        const scale = containerWidth / canvasRef.current.getWidth()
+        const zoom = canvasRef.current.getZoom() * scale
+
+        canvasRef.current.setDimensions({ width: containerWidth, height: containerWidth / ratio })
+        canvasRef.current.setViewportTransform([zoom, 0, 0, zoom, 0, 0])
+    }
+
 
     return (
         <>
-            <div id="fabric-canvas-wrapper" className="relative w-full">
+            <div id="fabric-canvas-wrapper" className="relative">
                 <canvas
                     id="fabric-canvas" 
                     className="rounded-lg relative"
                     />
+                {
+                    showOverlay &&
+                    <div className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
+                        <img src="./canvas_guide.png" alt="Canvas Guide" className="w-full h-full object-contain" />
+                    </div>
+                }
                 { showColorPicker &&
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                         <ChromePicker
@@ -160,6 +173,14 @@ export default function DrawingCanvas({applyTexture}) {
                     >
                     { !showColorPicker ? <RiPaintFill /> : <RiCloseCircleLine /> }
                 </UIButton>
+                <UIButton
+                    className={`${showOverlay ? "bg-purple-800" : "bg-white"} hover:bg-purple-900 hover:text-white text-xl px-2 py-2 rounded-lg`}
+                    onClick={() => setShowOverlay(!showOverlay)}
+                    tooltip={`${showOverlay ? "Hide" : "Show"} Guide`}
+                    >
+                    <RiGridLine />
+                </UIButton>
+
 
                 { !isDrawingMode ? <>
                     <UIButton 
