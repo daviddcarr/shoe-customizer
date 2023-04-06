@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+
+import { useState } from 'react'
+import { TextureLoader } from 'three'
+
+import DrawingCanvas from './components/DrawingCanvas'
+import { ShirtCanvas } from './components/Shirt'
+import { ShoeCanvas } from './components/Shoe'
 
 function App() {
+
+  const [texture, setTexture] = useState(null)
+
+  const applyTexture = () => {
+    const fabricCanvas = document.getElementById('fabric-canvas')
+    const dataUrl = fabricCanvas.toDataURL()
+
+    // console.log("dataUrl", dataUrl)
+
+    // const img = new Image();
+    // img.src = dataUrl;
+    // document.body.appendChild(img);
+
+    const loader = new TextureLoader()
+    loader.load(dataUrl, (texture) => {
+      setTexture(texture)
+    })
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <main className="max-w-[1024px] m-auto py-6">
+        <div className="flex justify-between flex-col md:flex-row p-4">
+          <div className=''>
+            <DrawingCanvas applyTexture={applyTexture} />
+          </div>
+          <div className='grow'>
+            <ShoeCanvas texture={texture} />
+          </div>
+        </div>
+      </main>
+    </>
+  )
 }
 
 export default App;
