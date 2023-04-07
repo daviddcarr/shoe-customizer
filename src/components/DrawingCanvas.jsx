@@ -9,7 +9,7 @@ import { FaShapes, FaPaintBrush } from "react-icons/fa"
 
 import UIButton from "./UIButton"
 
-export default function DrawingCanvas({applyTexture}) {
+export default function DrawingCanvas({applyTexture, tutorialState, setTutorialState}) {
 
     // Refs
     const canvasRef = useRef()
@@ -19,7 +19,7 @@ export default function DrawingCanvas({applyTexture}) {
     const [currentColor, setCurrentColor] = useState("#ff3333")
     const [showColorPicker, setShowColorPicker] = useState(false)
     const [brushSize, setBrushSize] = useState(5)
-    const [showOverlay, setShowOverlay] = useState(true)
+    const [showOverlay, setShowOverlay] = useState(false)
 
     // Effects
     useEffect(() => {
@@ -162,6 +162,10 @@ export default function DrawingCanvas({applyTexture}) {
                     className="bg-white hover:bg-purple-900 hover:text-white text-xl px-2 py-2 rounded-lg"
                     onClick={() => setIsDrawingMode(!isDrawingMode)}
                     tooltip={`Toggle ${isDrawingMode ? "Edit" : "Drawing"} Mode`}
+                    showTutorial={tutorialState === 0}
+                    tutorial="Click here to toggle between drawing and editing mode."
+                    tutorialState={tutorialState}
+                    setTutorialState={setTutorialState}
                     >
                         { isDrawingMode ? <FaShapes /> : <FaPaintBrush /> }
                 </UIButton>
@@ -170,6 +174,10 @@ export default function DrawingCanvas({applyTexture}) {
                     style={{backgroundColor: !showColorPicker ? currentColor : "#BBB"}}
                     onClick={() => setShowColorPicker(!showColorPicker)}
                     tooltip={showColorPicker ? "Close Color Picker" : "Open Color Picker"}
+                    showTutorial={tutorialState === 1}
+                    tutorial="Click here to open and close the color picker."
+                    tutorialState={tutorialState}
+                    setTutorialState={setTutorialState}
                     >
                     { !showColorPicker ? <RiPaintFill /> : <RiCloseCircleLine /> }
                 </UIButton>
@@ -177,6 +185,10 @@ export default function DrawingCanvas({applyTexture}) {
                     className={`${showOverlay ? "bg-purple-800" : "bg-white"} hover:bg-purple-900 hover:text-white text-xl px-2 py-2 rounded-lg`}
                     onClick={() => setShowOverlay(!showOverlay)}
                     tooltip={`${showOverlay ? "Hide" : "Show"} Guide`}
+                    showTutorial={tutorialState === 2}
+                    tutorial="Click here to show and hide the canvas guide."
+                    tutorialState={tutorialState}
+                    setTutorialState={setTutorialState}
                     >
                     <RiGridLine />
                 </UIButton>
@@ -184,9 +196,10 @@ export default function DrawingCanvas({applyTexture}) {
 
                 { !isDrawingMode ? <>
                     <UIButton 
-                        className="bg-white hover:bg-purple-900 hover:text-white text-xl px-2 py-2 rounded-lg"
+                        className="bg-white hover:bg-purple-900 hover:text-white text-xl px-2 py-2 rounded-lg ml-auto"
                         onClick={addSquare}
                         tooltip="Add Square"
+                        parentClasses="ml-auto"
                         >
                             <CgShapeSquare />
                     </UIButton>
@@ -207,6 +220,7 @@ export default function DrawingCanvas({applyTexture}) {
                 </> : <>
                     <UIButton
                         className={`${brushSize === 2 ?  'bg-purple-800 text-white' : 'bg-white'} hover:bg-purple-900 hover:text-white text-[5px] px-2 py-2 rounded-lg w-[36px]`}
+                        parentClasses="ml-auto"
                         onClick={() => updateBrushSize(2)}
                         tooltip="Small Brush"
                         >
@@ -240,7 +254,7 @@ export default function DrawingCanvas({applyTexture}) {
                     className="bg-white hover:bg-purple-900 hover:text-white text-xl px-2 py-2 rounded-lg"
                     onClick={deleteSelected}
                     tooltip="Delete Selected"
-                    parentClasses="ml-auto"
+                    parentClasses=""
                     >
                     <RiDeleteBin6Line />
                 </UIButton> }

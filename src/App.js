@@ -18,8 +18,8 @@ import { FaShapes, FaPaintBrush } from "react-icons/fa"
 function App() {
 
   const [texture, setTexture] = useState(null)
-  const [showAbout, setShowAbout] = useState(false)
   const [showThreeCanvas, setShowThreeCanvas] = useState(false)
+  const [tutorialState, setTutorialState] = useState(0)
 
   const applyTexture = () => {
     const fabricCanvas = document.getElementById('fabric-canvas')
@@ -40,17 +40,17 @@ function App() {
             <ul className="flex items-center space-x-4">
               <li>
                 <a 
-                  href="#about" 
+                  href="https://www.daviddylancarr.com/"
+                  target="_blank"
+                  rel="noreferrer"
                   className=""
-                  >About</a>
+                  >My Work</a>
               </li>
               <li>
                 <a 
-                  href="https://www.daviddylancarr.com/"
-                  target="_blank" 
-                  rel="noreferrer"
+                  href="#HowTo" 
                   className="px-4 py-2 bg-white text-purple-900 hover:bg-purple-900 hover:text-white rounded-lg"
-                  >Contact</a>
+                  >How-To</a>
               </li>
             </ul>
           </div>
@@ -58,20 +58,20 @@ function App() {
       <main className="max-w-[1024px] m-auto py-6  font-montserrat">
     
         <div className="px-4 flex justify-between items-center">
-          <h1 className="text-4xl font-bold text-white">3D SHOE DESIGNER</h1>
+          <h1 className="text-2xl md:text-4xl font-bold text-white">3D SHOE DESIGNER</h1>
           <UIButton
             onClick={() => setShowThreeCanvas(!showThreeCanvas)}
-            className={`${ showThreeCanvas ?  'bg-purple-800 text-white' : 'bg-white'} hover:bg-purple-900 hover:text-white px-2 text-xl py-2 rounded-lg md:hidden`}
+            className={`${ showThreeCanvas ?  'bg-purple-800 text-white' : 'bg-white'} hover:bg-purple-900 hover:text-white px-2 text-xl py-2 rounded-lg md:hidden w-max`}
             tooltip="Toggle 3D View"
           >
-            <HiCubeTransparent />
+            { showThreeCanvas ? "Hide" : "Show" } <HiCubeTransparent className="inline" />
           </UIButton>
         </div>
 
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mx-4 my-6 relative">
           <div className=''>
-            <DrawingCanvas applyTexture={applyTexture} />
+            <DrawingCanvas applyTexture={applyTexture} tutorialState={tutorialState} setTutorialState={setTutorialState} />
           </div>
           <div className={`${showThreeCanvas ? 'h-[calc(100%-44px)] bg-purple-800 bg-opacity-50 rounded-lg z-100 opacity-100' : 'h-0 md:h-auto opacity-0 md:opacity-100 pointer-events-none'} md:bg-transparent transition-opacity md:h-auto absolute md:relative top-0 left-0 w-full overflow-hidden`}>
             <div className='md:grow h-full'>
@@ -82,7 +82,7 @@ function App() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 mx-4 my-12 gap-4">
           <article className="space-y-4">
-            <h2 id="About" className="text-2xl font-bold text-white">How-To</h2>
+            <h2 id="HowTo" className="text-2xl font-bold text-white">How-To</h2>
             <hr />
             <p className="text-white">
               Use the white square canvas above to create your design!
@@ -109,7 +109,7 @@ function App() {
 
           <article>
             <form className="rounded-lg p-4 border-[1px] border-white bg-white bg-opacity-5 space-y-4">
-              <h2 className="text-2xl font-bold text-white">Contact</h2>
+              <h2 className="text-2xl font-bold text-white">Call To Action!</h2>
               <hr />
               <div className="flex flex-col">
                 <label htmlFor="name" className="text-white">Name</label>
@@ -124,6 +124,7 @@ function App() {
                 <textarea name="message" id="message" className="bg-white rounded-lg p-2 mt-0" />
               </div>
               <button className="bg-white text-purple-900 hover:bg-purple-900 hover:text-white rounded-lg px-4 py-2 mt-4">Send</button>
+              <p className="text-white text-xs">*This is a demo form, no data will be sent.</p>
             </form>
           </article>
 
