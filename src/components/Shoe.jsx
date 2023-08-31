@@ -45,7 +45,7 @@ export function ShoeCanvas({ texture }) {
       camera={{ position: [4, 3, 0] }}
       >
         <Environment
-            preset="sunset"
+            files={"sunset_fairway_2k.hdr"}
             />
         <OrbitControls 
             enablePan={false}
